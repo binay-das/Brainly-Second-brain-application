@@ -68,7 +68,13 @@ app.post('/api/v1/signin', async (req, res) => {
             res.status(401).json({ message: 'Invalid credentials' });
             return;
         }
-        const token = jwt.sign({ username }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
+        const token = jwt.sign({ 
+            id: user._id 
+        }, 
+        process.env.JWT_SECRET as string, 
+        { 
+            expiresIn: '1h' 
+        });
 
         res.json({
             message: 'Logged in successfully',
