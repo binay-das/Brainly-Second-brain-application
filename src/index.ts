@@ -107,6 +107,23 @@ app.post('/api/v1/content', userMiddleware, async (req, res) => {
     }
 });
 
+app.get('/api/v1/content', userMiddleware, async (req, res) => {
+    const userId = req.userId;
+    try {
+        const content = await Content.find({
+            userId
+        });
+
+        res.json(content);
+        return;
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+        return;
+    }
+});
+
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
