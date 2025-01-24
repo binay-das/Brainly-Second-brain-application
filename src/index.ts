@@ -1,9 +1,10 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { User } from './db';
+import { Content, User } from './db';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { userMiddleware } from './middleware';
 dotenv.config();
 
 const app = express();
@@ -68,12 +69,12 @@ app.post('/api/v1/signin', async (req, res) => {
             res.status(401).json({ message: 'Invalid credentials' });
             return;
         }
-        const token = jwt.sign({ 
-            id: user._id 
-        }, 
-        process.env.JWT_SECRET as string, 
-        { 
-            expiresIn: '1h' 
+        const token = jwt.sign({
+            id: user._id
+        },
+        process.env.JWT_SECRET as string,
+        {
+            expiresIn: '1h'
         });
 
         res.json({
@@ -86,6 +87,23 @@ app.post('/api/v1/signin', async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
         return;
+    }
+});
+
+app.post('/api/v1/content', userMiddleware, async (req, res) => {
+    try {
+        const { link, type } = req.body;
+        await Content.create({
+            link,
+            type,
+            userId: req.userId,
+            tags: []
+        });
+
+        res.status(201).json({ message: 'Content created' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
