@@ -140,6 +140,30 @@ app.delete('/api/v1/content', userMiddleware, async (req, res) => {
     }
 });
 
+
+app.put('/api/v1/content', userMiddleware, async (req, res) => {
+    try {
+        const userId = req.userId;
+        const contentId = req.body.contentId;
+        const tags = req.body.tags;
+
+        await Content.updateOne({
+            userId,
+            contentId
+        }, {
+            tags
+        });
+
+        res.json({ message: 'Content updated' });
+        return;
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+        return;
+    }
+});
+
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
