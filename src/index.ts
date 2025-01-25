@@ -72,10 +72,10 @@ app.post('/api/v1/signin', async (req, res) => {
         const token = jwt.sign({
             id: user._id
         },
-        process.env.JWT_SECRET as string,
-        {
-            expiresIn: '1h'
-        });
+            process.env.JWT_SECRET as string,
+            {
+                expiresIn: '1h'
+            });
 
         res.json({
             message: 'Logged in successfully',
@@ -124,6 +124,21 @@ app.get('/api/v1/content', userMiddleware, async (req, res) => {
     }
 });
 
+app.delete('/api/v1/content', userMiddleware, async (req, res) => {
+    try {
+        const userId = req.userId;
+        const contentId = req.body.contentId;
+
+        await Content.deleteMany({
+            userId,
+            contentId
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
