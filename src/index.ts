@@ -1,10 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { Content, User } from './db';
+import { Content, Link, User } from './db';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { userMiddleware } from './middleware';
+import { randomString } from './utils';
 dotenv.config();
 
 const app = express();
@@ -155,6 +156,49 @@ app.put('/api/v1/content', userMiddleware, async (req, res) => {
         });
 
         res.json({ message: 'Content updated' });
+        return;
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+        return;
+    }
+});
+
+app.post('/api/v1/brain/share', userMiddleware, async (req, res) => {
+    try {
+        const userId = req.userId;
+        const share = req.body.share;
+        if (share) {
+            const existingLink = await Link.findOne({
+                userId
+            });
+            if (existingLink) {
+                res.status(220).json({
+                    message: 'Link already shared',
+                    link: existingLink.hash
+                });
+                return;
+            }
+
+            const link = await Link.create({
+                userId,
+                hash: randomString(10)
+            });
+
+            res.status(200).json({
+                message: 'Link shared',
+                link: link.hash
+            });
+            return;
+
+            
+        } else {
+            await Link.deleteOne({
+                userId
+            });
+        }
+        res.status(200).json({ message: 'Link shared' });
         return;
 
     } catch (error) {
