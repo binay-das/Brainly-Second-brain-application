@@ -208,6 +208,41 @@ app.post('/api/v1/brain/share', userMiddleware, async (req, res) => {
     }
 });
 
+app.get('/api/v1/brain/:link', userMiddleware, async (req, res) => {
+    try {
+        const link = req.params.link;
+        const brain = await Link.findOne({
+            hash: link
+        });
+
+        if (!brain) {
+            res.status(411).json({ message: 'Brain not found' });
+            return;
+        }
+
+        const content = await Content.find({
+            userId: brain.userId
+        })
+
+        const user = await User.findOne({
+            _id: brain.userId
+        });
+
+        res.status(200).json({
+            username: user?.username,
+            content
+        });
+
+        return;
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+        return;
+    }
+});
+
+
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
