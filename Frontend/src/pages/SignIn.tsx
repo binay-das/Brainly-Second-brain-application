@@ -20,8 +20,11 @@ export const SignIn = () => {
 
       if (response) {
         const token = response.data.token;
-        console.log("Sign in successful", token);
+        // console.log("Sign in successful", token);
+        alert("Sign in successful");
         localStorage.setItem("token", token);
+        return;
+
       } else {
         console.error("Unexpected error!");
         alert("Sign in failed");
