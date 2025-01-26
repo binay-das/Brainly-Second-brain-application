@@ -1,6 +1,6 @@
-import { Button } from "./Button"
-import { CloseIcon } from "./icons/CloseIcon"
-import { InputComponent } from "./InputComponent"
+import { Button } from "./ui/Button";
+import { CloseIcon } from "./ui/icons/CloseIcon";
+import { InputComponent } from "./ui/InputComponent";
 
 interface NewContentModalProps {
     open: boolean;
