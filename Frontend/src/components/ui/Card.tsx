@@ -3,6 +3,7 @@ import { LinkIcon } from "./icons/LinkIcon";
 import { YoutubeIcon } from "./icons/YoutubeIcon";
 import { ShareIcon } from "./icons/ShareIcon";
 import { XIcon } from "./icons/XIcon";
+import { DeleteIcon } from "./icons/DeleteIcon";
 
 interface CardProps {
   title: string;
@@ -28,7 +29,7 @@ export const Card = (props: CardProps) => {
         </div>
         <div className="flex items-center gap-2 opacity-50">
           <ShareIcon size="md" />
-          <ShareIcon size="md" />
+          <DeleteIcon />
         </div>
       </div>
       <div className="w-full mt-4">
