@@ -33,7 +33,19 @@ export const Card = (props: CardProps) => {
         </div>
       </div>
       <div className="w-full mt-4">
-        
+        {props.type === "youtube" && (
+          <div>
+            <iframe
+              width="100%"
+              src="https://www.youtube.com/embed/GGJOC1FNqn8?si=ppj34WQNZEMjOkd7"
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            ></iframe>
+          </div>
+        )}
       </div>
     </div>
   );
