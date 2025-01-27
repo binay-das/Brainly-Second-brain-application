@@ -46,6 +46,13 @@ export const Card = (props: CardProps) => {
             ></iframe>
           </div>
         )}
+        {props.type === "twitter" && (
+          <div>
+            <blockquote className="twitter-tweet">
+              <a href="https://twitter.com/username/status/1883087349569232932"></a>
+            </blockquote>
+          </div>
+        )}
       </div>
     </div>
   );
