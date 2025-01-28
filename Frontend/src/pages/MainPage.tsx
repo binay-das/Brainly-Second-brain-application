@@ -7,9 +7,12 @@ import { PlusIcon } from "../components/ui/icons/PlusIcon";
 import { ShareIcon } from "../components/ui/icons/ShareIcon";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import { ShareBrainModal } from "../components/ShareBrainModal";
 
 export const MainPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(true);
+
   interface CardData {
     title: string;
     link: string;
@@ -19,14 +22,13 @@ export const MainPage = () => {
   const [cardData, setCardData] = useState<CardData[]>([]);
 
   const getCardData = async () => {
-    // console.log(localStorage.getItem('token'));
     const response = await axios.get(`${BACKEND_URL}/api/v1/content`, {
       headers: {
-        Authorization: `${localStorage.getItem('token')}`
-      }
+        Authorization: `${localStorage.getItem("token")}`,
+      },
     });
     setCardData(response.data);
-  }
+  };
 
   useEffect(() => {
     getCardData();
@@ -34,7 +36,14 @@ export const MainPage = () => {
 
   return (
     <div className="flex">
-      <NewContentModal open={isModalOpen} onClose={() => setIsModalOpen(false)}  />
+      <NewContentModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+      <ShareBrainModal
+        open={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+      />
       <Sidebar />
       <div className="flex flex-col ml-60 w-full p-4">
         <div className="flex justify-between items-center">
@@ -45,6 +54,7 @@ export const MainPage = () => {
               size="md"
               text="Share Brain"
               startIcon={<ShareIcon size="md" />}
+              onClick={() => setIsShareModalOpen(true)}
             />
             <Button
               variant="primary"
@@ -57,12 +67,22 @@ export const MainPage = () => {
         </div>
 
         <div className="w-full flex gap-4 mt-4">
-            <Card title="Project Ideas" link="yt.com" type="youtube" />
-            <Card title="How to build a Seond Brain" link="yt.com" type="document"  />
+          <Card title="Project Ideas" link="yt.com" type="youtube" />
+          <Card
+            title="How to build a Seond Brain"
+            link="yt.com"
+            type="document"
+          />
 
-            {cardData.map((eachCardData) => <div>
-              <Card title={eachCardData.title} link={eachCardData.link} type={eachCardData.type}/>
-            </div>)}
+          {cardData.map((eachCardData) => (
+            <div>
+              <Card
+                title={eachCardData.title}
+                link={eachCardData.link}
+                type={eachCardData.type}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </div>
