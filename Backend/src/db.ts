@@ -27,7 +27,12 @@ const UserSchema = new mongoose.Schema({
 
 const ContentSchema = new mongoose.Schema({
     title: {
-        type: String
+        type: String,
+        required: true
+    },
+    type: {
+        type: String,
+        enum: ["youtube", "tweet", "document", "link", "others"],
     },
     link: {
         type: String

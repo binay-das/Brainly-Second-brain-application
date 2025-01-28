@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { userMiddleware } from './middleware';
 import { randomString } from './utils';
+import cors from 'cors';
 dotenv.config();
 
 const app = express();
@@ -22,6 +23,7 @@ const connect = async (): Promise<void> => {
 connect();
 
 app.use(express.json());
+app.use(cors());
 app.get('/', (req, res) => {
     res.send('Hello, World!');
 });
@@ -93,8 +95,9 @@ app.post('/api/v1/signin', async (req, res) => {
 
 app.post('/api/v1/content', userMiddleware, async (req, res) => {
     try {
-        const { link, type } = req.body;
+        const { title, link, type } = req.body;
         await Content.create({
+            title,
             link,
             type,
             userId: req.userId,
