@@ -3,10 +3,12 @@ import { Button } from "../components/ui/Button";
 import { InputComponent } from "../components/ui/InputComponent";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import { useNavigate } from "react-router-dom";
 
 export const SignIn = () => {
   const usernameRef = useRef<HTMLInputElement>();
   const passwordRef = useRef<HTMLInputElement>();
+  const navigate = useNavigate();
 
   const handleSignIn = async () => {
     const username = usernameRef.current?.value;
@@ -20,7 +22,8 @@ export const SignIn = () => {
 
       if (response) {
         const token = response.data.token;
-        alert("Sign in successful");
+        navigate('/home')
+        // alert("Sign in successful");
         localStorage.setItem("token", token);
         return;
 
