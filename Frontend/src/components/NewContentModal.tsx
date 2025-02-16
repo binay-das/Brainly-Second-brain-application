@@ -1,6 +1,8 @@
+import { useRef } from "react";
 import { Button } from "./ui/Button";
 import { CloseIcon } from "./ui/icons/CloseIcon";
 import { InputComponent } from "./ui/InputComponent";
+import axios from "axios";
 
 interface NewContentModalProps {
   open: boolean;
@@ -8,6 +10,37 @@ interface NewContentModalProps {
 }
 
 export const NewContentModal = ({ open, onClose }: NewContentModalProps) => {
+  const titleRef = useRef<HTMLInputElement>();
+  const linkRef = useRef<HTMLInputElement>();
+
+  const newContent = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      const res = await axios.post(
+        "http://localhost:3000/api/v1/content",
+        {
+          title: titleRef.current?.value,
+          link: linkRef.current?.value,
+          type: "youtube",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(res.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div>
       {open && (
@@ -17,13 +50,13 @@ export const NewContentModal = ({ open, onClose }: NewContentModalProps) => {
               <CloseIcon className={""} />
             </div>
             <div className="flex flex-col gap-4">
-              <InputComponent placeholder={"Title"} />
-              <InputComponent placeholder={"Link"} />
+              <InputComponent placeholder={"Title"} reference={titleRef} />
+              <InputComponent placeholder={"Link"} reference={linkRef} />
               <Button
                 variant="primary"
                 size="md"
                 text="Add Content"
-                onClick={() => console.log("Hi")}
+                onClick={newContent}
               />
               <div>
                 <input type="radio" name="youtube" id="youtube" />
