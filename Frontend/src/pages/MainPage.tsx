@@ -8,10 +8,11 @@ import { ShareIcon } from "../components/ui/icons/ShareIcon";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { ShareBrainModal } from "../components/ShareBrainModal";
+import { Topbar } from "../components/Topbar";
 
 export const MainPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(true);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   interface CardData {
     title: string;
@@ -35,7 +36,8 @@ export const MainPage = () => {
   }, []);
 
   return (
-    <div className="flex">
+    <>
+      <Topbar />
       <NewContentModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -44,47 +46,49 @@ export const MainPage = () => {
         open={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
       />
-      <Sidebar />
-      <div className="flex flex-col ml-60 w-full p-4">
-        <div className="flex justify-between items-center">
-          <h1>All Notes</h1>
-          <div className="flex gap-4">
-            <Button
-              variant="secondary"
-              size="md"
-              text="Share Brain"
-              startIcon={<ShareIcon size="md" />}
-              onClick={() => setIsShareModalOpen(true)}
-            />
-            <Button
-              variant="primary"
-              size="md"
-              text="Add Content"
-              startIcon={<PlusIcon size="md" />}
-              onClick={() => setIsModalOpen(true)}
-            />
-          </div>
-        </div>
-
-        <div className="w-full flex gap-4 mt-4">
-          <Card title="Project Ideas" link="yt.com" type="youtube" />
-          <Card
-            title="How to build a Seond Brain"
-            link="yt.com"
-            type="document"
-          />
-
-          {cardData.map((eachCardData) => (
-            <div>
-              <Card
-                title={eachCardData.title}
-                link={eachCardData.link}
-                type={eachCardData.type}
+      <div className="flex mt-16 w-full overflow-hidden">
+        <Sidebar />
+        <div className="flex flex-col w-full p-4">
+          <div className="flex justify-between items-center">
+            <h1>All Notes</h1>
+            <div className="flex gap-4">
+              <Button
+                variant="secondary"
+                size="md"
+                text="Share Brain"
+                startIcon={<ShareIcon size="md" />}
+                onClick={() => setIsShareModalOpen(true)}
+              />
+              <Button
+                variant="primary"
+                size="md"
+                text="Add Content"
+                startIcon={<PlusIcon size="md" />}
+                onClick={() => setIsModalOpen(true)}
               />
             </div>
-          ))}
+          </div>
+
+          <div className="w-full flex gap-4 mt-4">
+            {/* <Card title="Project Ideas" link="yt.com" type="youtube" />
+            <Card
+              title="How to build a Seond Brain"
+              link="yt.com"
+              type="document"
+            /> */}
+
+            {cardData.map((eachCardData) => (
+              <div>
+                <Card
+                  title={eachCardData.title}
+                  link={eachCardData.link}
+                  type={eachCardData.type}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
