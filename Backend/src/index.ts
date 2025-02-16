@@ -1,25 +1,17 @@
 import express from 'express';
-import mongoose from 'mongoose';
+const app = express();
+import { connect } from './db';
 import { Content, Link, User } from './db';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import { userMiddleware } from './middleware';
 import { randomString } from './utils';
 import cors from 'cors';
+import { JWT_SECRET, PORT } from './config';
+import dotenv from 'dotenv';
 dotenv.config();
 
-const app = express();
 
-const db_url = process.env.DB_URL;
-const connect = async (): Promise<void> => {
-    if (db_url) {
-        await mongoose.connect(db_url);
-        console.log("Connected to MongoDB");
-    } else {
-        console.error("No database URL found");
-    }
-}
 connect();
 
 app.use(express.json());
@@ -75,7 +67,7 @@ app.post('/api/v1/signin', async (req, res) => {
         const token = jwt.sign({
             id: user._id
         },
-            process.env.JWT_SECRET as string,
+            JWT_SECRET as string,
             {
                 expiresIn: '1h'
             });
@@ -135,8 +127,11 @@ app.delete('/api/v1/content', userMiddleware, async (req, res) => {
 
         await Content.deleteMany({
             userId,
-            contentId
+            _id: contentId
         });
+
+        res.status(200).json({ message: "Content deleted successfully" });
+        return;
 
     } catch (error) {
         console.error(error);
@@ -177,7 +172,7 @@ app.post('/api/v1/brain/share', userMiddleware, async (req, res) => {
                 userId
             });
             if (existingLink) {
-                res.status(220).json({
+                res.status(200).json({
                     message: 'Link already shared',
                     link: existingLink.hash
                 });
@@ -195,7 +190,7 @@ app.post('/api/v1/brain/share', userMiddleware, async (req, res) => {
             });
             return;
 
-            
+
         } else {
             await Link.deleteOne({
                 userId
@@ -246,7 +241,7 @@ app.get('/api/v1/brain/:link', userMiddleware, async (req, res) => {
 });
 
 
-const PORT = process.env.PORT;
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
