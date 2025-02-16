@@ -17,8 +17,17 @@ export const userMiddleware = (req: Request, res: Response, next: NextFunction):
             res.status(403).json({ message: 'Authorization header missing' });
             return;
         }
+        
+        const token = header.split(" ")[1]; 
+        console.log(header);
+        console.log(token);
+        if (!token) {
+            res.status(403).json({ message: "Token missing" });
+            return;
+        }
 
-        const decoded = jwt.verify(header as string, JWT_SECRET as string) as { id: string };
+        // const decoded = jwt.verify(header as string, JWT_SECRET as string) as { id: string };
+        const decoded = jwt.verify(token as string, JWT_SECRET as string) as { id: string };
 
         if (!decoded) {
             res.status(403).json({ message: 'You are not logged in' });
@@ -34,7 +43,7 @@ export const userMiddleware = (req: Request, res: Response, next: NextFunction):
             console.error("JWT verification error:", error.message);
 
         } else {
-            console.error("JWT verification error:", error); 
+            console.error("JWT verification error:", error);
         }
 
         res.status(403).json({ message: 'Invalid or expired token' });
