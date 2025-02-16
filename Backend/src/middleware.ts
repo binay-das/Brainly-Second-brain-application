@@ -13,14 +13,12 @@ declare global {
 export const userMiddleware = (req: Request, res: Response, next: NextFunction): void => {
     try {
         const header = req.headers['authorization'];
-        if (!header) {
-            res.status(403).json({ message: 'Authorization header missing' });
+        if (!header || !header.startsWith("Bearer ")) {
+            res.status(403).json({ message: "Invalid or missing token" });
             return;
         }
         
         const token = header.split(" ")[1]; 
-        console.log(header);
-        console.log(token);
         if (!token) {
             res.status(403).json({ message: "Token missing" });
             return;

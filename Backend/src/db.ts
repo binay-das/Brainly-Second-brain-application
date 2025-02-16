@@ -1,16 +1,22 @@
-import mongoose, { mongo } from "mongoose";
-import dotenv from "dotenv";
-dotenv.config();
+import mongoose from "mongoose";
+import { DB_URL } from "./config";
 
-const db_url = process.env.DB_URL;
-const connect = async (): Promise<void> => {
-    if (db_url) { 
-        await mongoose.connect(db_url);
-        console.log("Connected to MongoDB"); 
-    } else {
+const db_url = DB_URL;
+
+export const connect = async (): Promise<void> => {
+    if (!db_url) {
         console.error("No database URL found");
+        process.exit(1);
     }
-}
+    try {
+        await mongoose.connect(db_url);
+        console.log("Connected to MongoDB from db.ts");
+    } catch (error) {
+        console.error("MongoDB Connection Error:", error);
+        process.exit(1);
+    }
+};
+
 
 
 const UserSchema = new mongoose.Schema({
