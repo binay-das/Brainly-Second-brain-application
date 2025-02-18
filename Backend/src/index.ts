@@ -146,14 +146,21 @@ app.put('/api/v1/content', userMiddleware, async (req, res) => {
         const contentId = req.body.contentId;
         const tags = req.body.tags;
 
-        await Content.updateOne({
+        const updatedContent = await Content.findOneAndUpdate({
             userId,
-            contentId
+            _id: contentId
         }, {
             tags
+        }, {
+            new: true
         });
 
-        res.json({ message: 'Content updated' });
+        if (!updatedContent) {
+            res.status(404).json({ message: "Content not found" });
+            return;
+        }
+
+        res.json({ message: 'Content updated', content: updatedContent });
         return;
 
     } catch (error) {

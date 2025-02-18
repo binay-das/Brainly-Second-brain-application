@@ -38,7 +38,8 @@ const ContentSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ["youtube", "tweet", "document", "link", "others"],
+        enum: ["youtube_video", "tweet", "document", "link", "others"],
+        required: true
     },
     link: {
         type: String
