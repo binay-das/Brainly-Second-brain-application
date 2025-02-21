@@ -9,7 +9,7 @@ export const InputComponent = (props: {
         ref={props.reference}
         type="text"
         placeholder={props.placeholder}
-        className="px-4 py-2 border rounded-md"
+        className="px-4 py-2 border rounded-md w-full"
       />
     </div>
   );

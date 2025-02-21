@@ -4,6 +4,7 @@ import { CloseIcon } from "./ui/icons/CloseIcon";
 import { InputComponent } from "./ui/InputComponent";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import { useNavigate } from "react-router-dom";
 
 interface NewContentModalProps {
   open: boolean;
@@ -18,8 +19,10 @@ export const NewContentModal = ({
 }: NewContentModalProps) => {
   const titleRef = useRef<HTMLInputElement>();
   const linkRef = useRef<HTMLInputElement>();
+  const descriptionRef = useRef<HTMLInputElement>();
   const [contentType, setContentType] = useState("youtube");
 
+  const navigate = useNavigate();
   const newContent = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -32,6 +35,7 @@ export const NewContentModal = ({
         `${BACKEND_URL}/api/v1/content`,
         {
           title: titleRef.current?.value,
+          description: descriptionRef.current?.value,
           link: linkRef.current?.value,
           type: contentType,
         },
@@ -43,10 +47,12 @@ export const NewContentModal = ({
       );
 
       console.log(res.data);
-      refreshContent();
+      navigate("/home");
+      
     } catch (error) {
       console.error("Error:", error);
     }
+    refreshContent();
   };
 
   return (
@@ -61,10 +67,11 @@ export const NewContentModal = ({
           <div className="flex flex-col gap-4">
             <h1 className="text-center text-2xl font-bold">Add new</h1>
             <InputComponent placeholder="Title" reference={titleRef} />
+            <InputComponent placeholder="Description" reference={descriptionRef} />
             <InputComponent placeholder="Link" reference={linkRef} />
-            <div className="flex gap-2">
+            <div className="flex justify-between gap-4">
               {[
-                { label: "YouTube", value: "youtube" },
+                { label: "YT Video", value: "youtube" },
                 { label: "Tweet", value: "twitter" },
                 { label: "Document", value: "document" },
               ].map(({ label, value }) => (

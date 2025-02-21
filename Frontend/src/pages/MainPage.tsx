@@ -13,22 +13,34 @@ import { Topbar } from "../components/Topbar";
 export const MainPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [cardData, setCardData] = useState<CardData[]>([]);
 
   interface CardData {
+    _id: string;
     title: string;
     link: string;
     type: "twitter" | "youtube" | "document" | "link";
   }
 
-  const [cardData, setCardData] = useState<CardData[]>([]);
-
   const getCardData = async () => {
-    const response = await axios.get(`${BACKEND_URL}/api/v1/content`, {
-      headers: {
-        Authorization: `${localStorage.getItem("token")}`,
-      },
-    });
-    setCardData(response.data);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found in localStorage");
+        return;
+      }
+
+      const response = await axios.get(`${BACKEND_URL}/api/v1/content`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCardData(response.data);
+      console.log(response.data[0]._id);
+    } catch (err) {
+      console.error(err);
+    }
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -36,20 +48,21 @@ export const MainPage = () => {
   }, []);
 
   return (
-    <>
-      <Topbar />
+    <div className="max-w-screen">
+      <Topbar className="w-screen h-16 fixed top-0 z-9" />
       <NewContentModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        refreshContent={getCardData}
       />
       <ShareBrainModal
         open={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
-      />
-      <div className="flex mt-16 w-full overflow-hidden">
+      /> 
+      <div className="flex mt-16 w-full border-4">
         <Sidebar />
-        <div className="flex flex-col w-full p-4">
-          <div className="flex justify-between items-center">
+        <div className="flex flex-col w-screen p-4 border-2 border-amber-300">
+          <div className="w-full flex justify-between items-center border">
             <h1>All Notes</h1>
             <div className="flex gap-4">
               <Button
@@ -68,27 +81,36 @@ export const MainPage = () => {
               />
             </div>
           </div>
-
-          <div className="w-full flex gap-4 mt-4">
-            {/* <Card title="Project Ideas" link="yt.com" type="youtube" />
-            <Card
-              title="How to build a Seond Brain"
-              link="yt.com"
-              type="document"
-            /> */}
-
-            {cardData.map((eachCardData) => (
-              <div>
+          <div className="w-full flex flex-wrap mt-4 border justify-betwee">
+            
+            {cardData.map((eachCardData, index) => (
+              <div key={eachCardData._id} className="m-2">
                 <Card
-                  title={eachCardData.title}
-                  link={eachCardData.link}
-                  type={eachCardData.type}
+                  key={eachCardData.link || index}
+                  {...eachCardData}
+                  id={eachCardData._id}
+                  deleteContent={() => {
+                    axios
+                      .delete(`${BACKEND_URL}/api/v1/content`, {
+                        data: { contentId: eachCardData._id },
+
+                        headers: {
+                          Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                          )}`,
+                        },
+                      })
+                      .then(() => {
+                        console.log("Content deleted successfully");
+                        getCardData();
+                      });
+                  }}
                 />
               </div>
             ))}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

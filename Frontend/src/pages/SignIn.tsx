@@ -16,8 +16,8 @@ export const SignIn = () => {
 
     try {
       const response = await axios.post(`${BACKEND_URL}/api/v1/signin`, {
-        username,
-        password,
+        username: 'binayyy',
+        password: 'password',
       });
 
       if (response) {

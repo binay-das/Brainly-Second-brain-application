@@ -3,7 +3,9 @@ import { HamburgerIcon } from "./ui/icons/HamburgerIcon";
 import { Button } from "./ui/Button";
 import { useNavigate } from "react-router-dom";
 
-export const Topbar = () => {
+export const Topbar = ({className}:{
+  className: string
+}) => {
   const [token, setToken] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -21,7 +23,7 @@ export const Topbar = () => {
   };
 
   return (
-    <div className="flex justify-between items-center p-8 gap-4 bg-slate-400 w-full h-16 fixed top-0 z-9">
+    <div className={`flex justify-between items-center p-8 gap-4 bg-slate-400 ${className}`}>
       <div className="flex gap-4">
         <HamburgerIcon />
         <h1>Brainly</h1>
