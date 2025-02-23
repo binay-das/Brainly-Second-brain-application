@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/v1/signup', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, email, firstName, lastName } = req.body;
     try {
         const existingUser = await User.findOne({
             username
@@ -35,7 +35,10 @@ app.post('/api/v1/signup', async (req, res) => {
 
         await User.create({
             username,
-            password: hashedPassword
+            password: hashedPassword,
+            email,
+            firstName,
+            lastName
         });
         res.status(201).json({ message: 'User created' });
         return;
