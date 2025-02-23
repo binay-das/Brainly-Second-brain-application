@@ -6,6 +6,7 @@ import { TagsIcon } from "./ui/icons/TagsIcon";
 import { XIcon } from "./ui/icons/XIcon";
 import { YoutubeIcon } from "./ui/icons/YoutubeIcon";
 import { HamburgerIcon } from "./ui/icons/HamburgerIcon";
+import { SearchIcon } from "./ui/icons/SearchIcon";
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState<boolean>(
@@ -29,7 +30,9 @@ const useMediaQuery = (query: string) => {
   return matches;
 };
 
-export const Sidebar = () => {
+export const Sidebar = ({onChange}: {
+  onChange: () => void;
+}) => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -39,16 +42,16 @@ export const Sidebar = () => {
 
   return (
     <>
-      <div onClick={() => setSidebarOpen(!sidebarOpen)}>
-        <HamburgerIcon />
-      </div>
       <div
-        className={`bg-gray-200 min-h-screen transition-transform duration-300 ease-in-out ${
+        className={`bg-[#202020] text-[#7F7F7F] min-h-screen transition-transform duration-300 ease-in-out pt-6 ${
           sidebarOpen ? "w-60" : "w-0 md:w-0"
         } 
     ${isDesktop ? "relative" : "fixed top-0 left-0 h-full z-40 shadow-lg"}
     ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} overflow-hidden`}
       >
+        <div onClick={() => setSidebarOpen(!sidebarOpen)}>
+          <HamburgerIcon />
+        </div>
         {!isDesktop && sidebarOpen && (
           <div
             className="p-2 cursor-pointer"
@@ -57,7 +60,10 @@ export const Sidebar = () => {
             <HamburgerIcon />
           </div>
         )}
-
+        <div className="flex justify-start items-center gap-2 text-sm font-bold m-2 pl-4 rounded cursor-pointer bg-gray-800">
+          <SearchIcon />
+          <input type="text" className="w-full px-2 py-1" placeholder="Search your brain" onChange={onChange}/>
+        </div>
         <SidebarItem icon={<XIcon />} title="Tweet" />
         <SidebarItem icon={<YoutubeIcon />} title="Videos" />
         <SidebarItem icon={<DocumentIcon />} title="Documents" />
