@@ -23,19 +23,19 @@ export const Card = (props: CardProps) => {
       <div className="h-1/3 w-full px-2 bg-[#2C2C2C]  rounded-t-3xl flex justify-between">
         <div className="flex items-center gap-2 ">
           {props.type == "twitter" ? (
-            <XIcon />
+            <XIcon size="lg" />
           ) : props.type == "youtube" ? (
-            <YoutubeIcon />
+            <YoutubeIcon size="lg" />
           ) : props.type == "document" ? (
-            <DocumentIcon />
+            <DocumentIcon size="lg" />
           ) : (
-            <LinkIcon />
+            <LinkIcon size="lg" />
           )}
         </div>
         <div className="flex items-center gap-2 opacity-50">
           <ShareIcon size="md" />
           <div onClick={props.deleteContent}>
-            <DeleteIcon />
+            <DeleteIcon size="md" />
           </div>
         </div>
       </div>

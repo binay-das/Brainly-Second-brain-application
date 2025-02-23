@@ -61,7 +61,7 @@ export const NewContentModal = ({
         <div className="bg-white p-6 rounded-md shadow-lg w-96">
           <div className="flex justify-end mb-4">
             <button onClick={onClose}>
-              <CloseIcon className={""} />
+              <CloseIcon size="lg" />
             </button>
           </div>
           <div className="flex flex-col gap-4">

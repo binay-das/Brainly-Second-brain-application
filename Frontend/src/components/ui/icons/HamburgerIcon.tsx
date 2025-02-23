@@ -1,4 +1,6 @@
-export const HamburgerIcon = () => {
+import { IconProps, iconSizeVariants } from ".";
+
+export const HamburgerIcon = (props: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -6,7 +8,7 @@ export const HamburgerIcon = () => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="size-6 cursor-pointer"
+      className={iconSizeVariants[props.size]}
     >
       <path
         strokeLinecap="round"

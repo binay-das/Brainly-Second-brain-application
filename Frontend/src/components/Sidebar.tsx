@@ -7,6 +7,7 @@ import { XIcon } from "./ui/icons/XIcon";
 import { YoutubeIcon } from "./ui/icons/YoutubeIcon";
 import { HamburgerIcon } from "./ui/icons/HamburgerIcon";
 import { SearchIcon } from "./ui/icons/SearchIcon";
+import { DeleteIcon } from "./ui/icons/DeleteIcon";
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState<boolean>(
@@ -50,25 +51,29 @@ export const Sidebar = ({onChange}: {
     ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} overflow-hidden`}
       >
         <div onClick={() => setSidebarOpen(!sidebarOpen)}>
-          <HamburgerIcon />
+          <HamburgerIcon size="lg" />
         </div>
         {!isDesktop && sidebarOpen && (
           <div
             className="p-2 cursor-pointer"
             onClick={() => setSidebarOpen(false)}
           >
-            <HamburgerIcon />
+            <HamburgerIcon size="lg" />
           </div>
         )}
+        <SidebarItem icon={<DeleteIcon size="md" />} title="Home" />
+        
         <div className="flex justify-start items-center gap-2 text-sm font-bold m-2 pl-4 rounded cursor-pointer bg-gray-800">
-          <SearchIcon />
+          <SearchIcon size="lg" />
           <input type="text" className="w-full px-2 py-1" placeholder="Search your brain" onChange={onChange}/>
         </div>
-        <SidebarItem icon={<XIcon />} title="Tweet" />
-        <SidebarItem icon={<YoutubeIcon />} title="Videos" />
-        <SidebarItem icon={<DocumentIcon />} title="Documents" />
-        <SidebarItem icon={<LinkIcon />} title="Links" />
-        <SidebarItem icon={<TagsIcon />} title="Tags" />
+        <SidebarItem icon={<DeleteIcon size="md" />} title="Brainly AI" />
+        <SidebarItem icon={<DeleteIcon size="md" />} title="Messages" />
+        <SidebarItem icon={<XIcon size="md" />} title="Tweet" />
+        <SidebarItem icon={<YoutubeIcon size="md" />} title="Videos" />
+        <SidebarItem icon={<DocumentIcon size="md" />} title="Documents" />
+        <SidebarItem icon={<LinkIcon size="md"  />} title="Links" />
+        <SidebarItem icon={<TagsIcon size="md"  />} title="Tags" />
       </div>
     </>
   );
