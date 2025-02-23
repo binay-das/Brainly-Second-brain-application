@@ -19,8 +19,8 @@ interface CardProps {
 export const Card = (props: CardProps) => {
   const navigate = useNavigate();
   return (
-    <div className="h-40 w-40  bg-gray-600 text-gray-300 rounded-2xl shadow-md cursor-pointer">
-      <div className="h-1/3 w-full px-2 bg-[#2C2C2C]  rounded-t-2xl flex justify-between">
+    <div className="h-40 w-40  bg-gray-600 text-gray-300 rounded-3xl shadow-md cursor-pointer">
+      <div className="h-1/3 w-full px-2 bg-[#2C2C2C]  rounded-t-3xl flex justify-between">
         <div className="flex items-center gap-2 ">
           {props.type == "twitter" ? (
             <XIcon />
@@ -40,7 +40,7 @@ export const Card = (props: CardProps) => {
         </div>
       </div>
 
-      <div className="h-2/3 w-full px-2 bg-[#252525] rounded-b-2xl">
+      <div className="h-2/3 w-full px-2 bg-[#252525] rounded-b-3xl">
         <div
           className="w-full h-full p-2"
           onClick={() => navigate(`/content/${props.id}`)}
