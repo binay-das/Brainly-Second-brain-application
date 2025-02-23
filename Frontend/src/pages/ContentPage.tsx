@@ -9,6 +9,7 @@ import { Sidebar } from "../components/Sidebar";
 import { Button } from "../components/ui/Button";
 import { ShareIcon } from "../components/ui/icons/ShareIcon";
 import { PlusIcon } from "../components/ui/icons/PlusIcon";
+import { RedirectIcon } from "../components/ui/icons/RedirectIcon";
 
 export const ContentPage = () => {
   const { id } = useParams();
@@ -25,11 +26,9 @@ export const ContentPage = () => {
   const [content, setContent] = useState<Content | null>(null);
 
   useEffect(() => {
-    console.log("Content Page");
     getCardContent();
-
-    
   }, []);
+
   const getCardContent = async () => {
     try {
       console.log(`${BACKEND_URL}/api/v1/content/${id}`);
@@ -50,6 +49,7 @@ export const ContentPage = () => {
     return match ? match[1] : null;
   };
   const VIDEO_ID = content ? extractYouTubeID(content.link) : null;
+  
   const extractTweetID = (url: string) => {
     const match = url.match(/status\/(\d+)/);
     return match ? match[1] : null;
@@ -57,14 +57,10 @@ export const ContentPage = () => {
 
   const TWEET_ID = content ? extractTweetID(content.link) : null;
 
-  // Example usage
-  // const url = "https://www.youtube.com/watch?v=M7lc1UVf-VE";
-  // console.log(extractYouTubeID(url)); // Output: M7lc1UVf-VE
-
-  if (!content) return <p>Loading...</p>;
+  if (!content) <p className="text-center text-lg mt-10">Loading...</p>;
   return (
     <div>
-      <Topbar className="w-screen h-16 fixed top-0 z-9" />
+      {/* <Topbar className="w-screen h-16 fixed top-0 z-9" /> */}
       <NewContentModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -74,11 +70,11 @@ export const ContentPage = () => {
         open={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
       />
-      <div className="flex mt-16 w-full ">
+      <div className="flex w-full ">
         <Sidebar onChange={() => console.log('Key pressed from control page')} />
-        <div className="flex flex-col w-screen p-4 ">
-          <div className="w-full flex justify-between items-center">
-            {/* <h1 className="">{content.title}</h1> */}
+        <div className="flex flex-col w-screen p-4 bg-[#191919] text-[#D4D4D4]">
+          <div className="w-full flex justify-between items-center ">
+            <h1 className="font-bold text-4xl ml-10">Brainly</h1>
             <div className="flex gap-4">
               <Button
                 variant="secondary"
@@ -96,13 +92,25 @@ export const ContentPage = () => {
               />
             </div>
           </div>
-          <div className="w-full min-h-screen flex justify-center mt-4 bg-gray-900 text-white">
-            <div className="w-2/3 md:mt-18">
-              <div className="font-medium text-4xl">{content.title}</div>
+
+          
+          <div className="w-full flex justify-center mt-6">
+            <div className="w-2/3 bg-[#222] rounded-xl p-6 shadow-lg">
+              <div className="font-medium text-4xl">{content?.title}</div>
               <div className="p-4">
-                <div className="text-md pl-8 text-blue-300">{content.link}</div>
+              {content?.link && (
+                  <a
+                    href={content.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 p-2 bg-[#333] rounded-xl inline-flex justify-center items-center gap-2 underline hover:text-blue-300 transition"
+                  > 
+                    Open in {content.type === "youtube" ? "YouTube" : content.type === "twitter" ? "Twitter" : "Web"}
+                    <RedirectIcon size="lg" />
+                  </a>
+                )}
                 <div className="w-full p-4 flex justify-center items-center ">
-                  {content.type === "youtube" && (
+                  {content?.type === "youtube" && (
                     <iframe
                       width="560"
                       height="315"
@@ -114,7 +122,7 @@ export const ContentPage = () => {
                       allowFullScreen
                     ></iframe>
                   )}
-                  {content.type === "twitter" && (
+                  {content?.type === "twitter" && (
                     <blockquote className="twitter-tweet">
                     <a href={`https://twitter.com/username/status/${TWEET_ID}`}></a>
                   </blockquote>
@@ -122,8 +130,7 @@ export const ContentPage = () => {
 
                 </div>
                 <div className="text-md pl-8">
-                  `https://twitter.com/i/web/status/{TWEET_ID}{" "}
-                  __________________ {content.description}
+                  {content?.description}
                 </div>
               </div>
             </div>
