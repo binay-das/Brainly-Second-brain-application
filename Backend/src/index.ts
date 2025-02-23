@@ -87,9 +87,10 @@ app.post('/api/v1/signin', async (req, res) => {
 
 app.post('/api/v1/content', userMiddleware, async (req, res) => {
     try {
-        const { title, link, type } = req.body;
+        const { title, link, description, type } = req.body;
         await Content.create({
             title,
+            description,
             link,
             type,
             userId: req.userId,
@@ -113,6 +114,25 @@ app.get('/api/v1/content', userMiddleware, async (req, res) => {
         res.json(content);
         return;
 
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+        return;
+    }
+});
+
+app.get('/api/v1/content/:id', userMiddleware, async (req, res) => {
+    const userId = req.userId;
+    const id = req.params.id;
+    try {
+        const content = await Content.findOne({
+            _id: id,
+            userId: userId
+        })
+
+        res.json(content);
+        console.log(content);
+        return;
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
@@ -202,6 +222,7 @@ app.post('/api/v1/brain/share', userMiddleware, async (req, res) => {
             await Link.deleteOne({
                 userId
             });
+            res.status(200).json({ message: 'Link deleted' });
         }
         res.status(200).json({ message: 'Link shared' });
         return;
