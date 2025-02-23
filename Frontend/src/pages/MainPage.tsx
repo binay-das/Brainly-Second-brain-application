@@ -14,6 +14,8 @@ export const MainPage = () => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [cardData, setCardData] = useState<CardData[]>([]);
 
+  const [greeting, setGreeting] = useState<string>("");
+
   const searchRef = useRef<HTMLInputElement | null>(null);
 
   interface CardData {
@@ -43,7 +45,17 @@ export const MainPage = () => {
     setIsModalOpen(false);
   };
 
+  const getGreeting = (): string => {
+    const date = new Date();
+    const hours = date.getHours();
+    if (hours >= 5 && hours < 12) return "Good Morning";
+    if (hours >= 12 && hours < 17) return "Good Afternoon";
+    if (hours >= 17 && hours < 21) return "Good Evening";
+    return "Good Night";
+  }
+
   useEffect(() => {
+    setGreeting(getGreeting());
     getCardData();
   }, []);
 
@@ -62,7 +74,7 @@ export const MainPage = () => {
       <div className="flex w-full">
         <Sidebar onChange={() => console.log('Key pressed to search')} />
         <div className="flex flex-col w-screen p-4 bg-[#191919] text-[#D4D4D4]">
-        <h1 className="mb-2 text-center text-4xl font-bold">Good Morning, {'Binay Das'}</h1>
+        <h1 className="mb-2 text-center text-4xl font-bold">{greeting}, User</h1>
           <div className="w-full flex justify-between items-center">
             <h1 className="text-2xl font-bold tracking-wide">Your second brain</h1>
             <div className="flex gap-4">
