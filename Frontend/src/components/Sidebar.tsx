@@ -8,6 +8,7 @@ import { YoutubeIcon } from "./ui/icons/YoutubeIcon";
 import { HamburgerIcon } from "./ui/icons/HamburgerIcon";
 import { SearchIcon } from "./ui/icons/SearchIcon";
 import { DeleteIcon } from "./ui/icons/DeleteIcon";
+import { useNavigate } from "react-router-dom";
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState<boolean>(
@@ -31,15 +32,22 @@ const useMediaQuery = (query: string) => {
   return matches;
 };
 
-export const Sidebar = ({onChange}: {
-  onChange: () => void;
-}) => {
+export const Sidebar = ({ onChange }: { onChange: () => void }) => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   useEffect(() => {
     setSidebarOpen(isDesktop);
   }, [isDesktop]);
+
+  const [token, setToken] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const findToken = () => {
+    setToken(localStorage.getItem("token"));
+  };
+  useEffect(() => {
+    findToken();
+  }, []);
 
   return (
     <>
@@ -62,18 +70,36 @@ export const Sidebar = ({onChange}: {
           </div>
         )}
         <SidebarItem icon={<DeleteIcon size="md" />} title="Home" />
-        
+
         <div className="flex justify-start items-center gap-2 text-sm font-bold m-2 pl-4 rounded cursor-pointer bg-gray-800">
           <SearchIcon size="lg" />
-          <input type="text" className="w-full px-2 py-1" placeholder="Search your brain" onChange={onChange}/>
+          <input
+            type="text"
+            className="w-full px-2 py-1"
+            placeholder="Search your brain"
+            onChange={onChange}
+          />
         </div>
         <SidebarItem icon={<DeleteIcon size="md" />} title="Brainly AI" />
         <SidebarItem icon={<DeleteIcon size="md" />} title="Messages" />
         <SidebarItem icon={<XIcon size="md" />} title="Tweet" />
         <SidebarItem icon={<YoutubeIcon size="md" />} title="Videos" />
         <SidebarItem icon={<DocumentIcon size="md" />} title="Documents" />
-        <SidebarItem icon={<LinkIcon size="md"  />} title="Links" />
-        <SidebarItem icon={<TagsIcon size="md"  />} title="Tags" />
+        <SidebarItem icon={<LinkIcon size="md" />} title="Links" />
+        <SidebarItem icon={<TagsIcon size="md" />} title="Tags" />
+        <div className="" onClick={() => {
+          localStorage.removeItem("token");
+          navigate('/');
+          }}>
+          {token && (
+            <SidebarItem icon={<DeleteIcon size="md" />} title="Logout" />
+          )}
+        </div>
+        <div onClick={() => navigate('/signin')}>
+          {!token && (
+            <SidebarItem icon={<DeleteIcon size="md" />} title="LogIn" />
+          )}
+        </div>
       </div>
     </>
   );
