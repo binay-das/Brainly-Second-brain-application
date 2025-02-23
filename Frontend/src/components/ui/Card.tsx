@@ -4,6 +4,7 @@ import { YoutubeIcon } from "./icons/YoutubeIcon";
 import { ShareIcon } from "./icons/ShareIcon";
 import { XIcon } from "./icons/XIcon";
 import { DeleteIcon } from "./icons/DeleteIcon";
+import { Link, useNavigate } from "react-router-dom";
 
 interface CardProps {
   id: string;
@@ -11,14 +12,16 @@ interface CardProps {
   link: string;
   description?: string;
   type: "twitter" | "youtube" | "document" | "link";
+  tags?: string[];
   deleteContent: () => void;
 }
 
 export const Card = (props: CardProps) => {
+  const navigate = useNavigate();
   return (
-    <div className="min-h-66 inline-flex flex-col items-center justify-center p-4 bg-gray-100 rounded-md shadow-md ">
-      <div className="flex justify-between items-center w-full">
-        <div className="flex items-center gap-2">
+    <div className="h-40 w-40  bg-gray-600 text-gray-300 rounded-2xl shadow-md cursor-pointer">
+      <div className="h-1/3 w-full px-2 bg-[#2C2C2C]  rounded-t-2xl flex justify-between">
+        <div className="flex items-center gap-2 ">
           {props.type == "twitter" ? (
             <XIcon />
           ) : props.type == "youtube" ? (
@@ -28,35 +31,27 @@ export const Card = (props: CardProps) => {
           ) : (
             <LinkIcon />
           )}
-          <p className="text-lg">{props.title}</p>
         </div>
         <div className="flex items-center gap-2 opacity-50">
           <ShareIcon size="md" />
-          <div onClick={props.deleteContent}><DeleteIcon /></div>
+          <div onClick={props.deleteContent}>
+            <DeleteIcon />
+          </div>
         </div>
       </div>
-      <p className="w-full pl-2">{props.description}</p>
-      <div className="w-full mt-">
-        {props.type === "youtube" && (
-          <div>
-            <iframe
-              width="100%"
-              src="https://www.youtube.com/embed/GGJOC1FNqn8"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            ></iframe>
+
+      <div className="h-2/3 w-full px-2 bg-[#252525] rounded-b-2xl">
+        <div
+          className="w-full h-full p-2"
+          onClick={() => navigate(`/content/${props.id}`)}
+        >
+          <div className="text-md font-medium">{props.title}</div>
+          <div className="h-1/2 w-full text-xs mt-1 opacity-50 line-clamp-2">
+            {props.description}
           </div>
-        )}
-        {props.type === "twitter" && (
-          <div>
-            <blockquote className="twitter-tweet">
-              <a href="https://twitter.com/username/status/1883087349569232932"></a>
-            </blockquote>
-          </div>
-        )}
+          
+          <div>{props.tags}</div>
+        </div>
       </div>
     </div>
   );
